@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ItemTodoBinding
 
+//TODO give option to display all items or only items that have been done
+
 class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
     class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) // serve the purpose of holding a reference to a single view within a RecyclerView
     private lateinit var binding: ItemTodoBinding
@@ -22,6 +24,7 @@ class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<T
         notifyItemInserted(todos.size - 1)
     }
 
+    //TODO put done todos in a different screen, add date and time itwas done
     fun deleteDoneTodos() {
         todos.removeIf { !it.isChecked }
         notifyDataSetChanged()
@@ -38,6 +41,7 @@ class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<T
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         val curTodo = todos[position]
         holder.itemView.apply {
+
             binding.tvTodoTitle.text = curTodo.title
             binding.cbDone.isChecked = curTodo.isChecked
             toggleStrikeThrough(binding.tvTodoTitle, curTodo.isChecked)
