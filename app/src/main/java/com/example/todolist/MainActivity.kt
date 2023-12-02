@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.databinding.ActivityMainBinding
 
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var todoAdapter: ToDoAdapter
@@ -17,18 +16,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val todo = mutableListOf<ToDo>()
-        todo.addAll(listOf(
-            ToDo("Complete homework", true),
-            ToDo("Go to the gym", false),
-            ToDo("Buy groceries", true),
-            ToDo("Call a friend", false)
-        ))
 
         todoAdapter = ToDoAdapter(todo)
 
         binding.rvToDoItems.apply {
             adapter = todoAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = LinearLayoutManager(this@MainActivity) //todo use a grid layout
         }
 
 

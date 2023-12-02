@@ -8,7 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ItemTodoBinding
 
+import  java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 //TODO give option to display all items or only items that have been done
+
 
 class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
     class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) // serve the purpose of holding a reference to a single view within a RecyclerView
@@ -20,11 +25,12 @@ class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<T
     }
 
     fun addTodo(todo: ToDo) {
-        todos.add(todo)
-        notifyItemInserted(todos.size - 1)
+        todos.add(0, todo) //add to do at the beginning of the list
+        notifyItemInserted(0)
     }
 
-    //TODO put done todos in a different screen, add date and time itwas done
+    //TODO put done todos in a different screen, add date and time it was done
+    //make it not delete, but rather not be displayed
     fun deleteDoneTodos() {
         todos.removeIf { !it.isChecked }
         notifyDataSetChanged()
@@ -38,15 +44,26 @@ class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<T
         tvTodoTitle.paintFlags = if (isChecked) tvTodoTitle.paintFlags or STRIKE_THRU_TEXT_FLAG else tvTodoTitle.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
     }
 
+
+   /* fun convertDateToTimeZone(date: Date, zoneId: ZoneId = ZoneId.of("America/New_York")): LocalDateTime {
+        val instant = date.toInstant()
+        return LocalDateTime.ofInstant(instant, zoneId)
+    }*/
+
+    private fun formatDate(date: Date): String{
+        val format = SimpleDateFormat("hh:mm:ss a dd MMM yy", Locale.getDefault())
+        return format.format(date)
+    }
+
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         val curTodo = todos[position]
-        holder.itemView.apply {
-
-            binding.tvTodoTitle.text = curTodo.title
-            binding.cbDone.isChecked = curTodo.isChecked
-            toggleStrikeThrough(binding.tvTodoTitle, curTodo.isChecked)
-            binding.cbDone.setOnCheckedChangeListener { _, isChecked ->
-                toggleStrikeThrough(binding.tvTodoTitle, isChecked)
+        binding.apply {
+            tvTodoTitle.text = curTodo.title
+            cbDone.isChecked = curTodo.isChecked
+            tvDateCreated.text = formatDate(curTodo.dateCreated)
+            toggleStrikeThrough(tvTodoTitle, cbDone.isChecked)
+            cbDone.setOnCheckedChangeListener { _, isChecked ->
+                toggleStrikeThrough(tvTodoTitle, isChecked)
                 curTodo.isChecked = !curTodo.isChecked
             }
         }
